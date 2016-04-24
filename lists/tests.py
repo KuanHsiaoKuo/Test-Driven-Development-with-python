@@ -78,7 +78,8 @@ class ListViewTest(TestCase):
 
         #request = HttpRequest()
         #response = home_page(request)
-        response = self.client.get('/lists/the-only-list-in-the-world')
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(response,'list.html')
 
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
