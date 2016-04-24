@@ -45,9 +45,10 @@ class ListAndItemModelsTest(TestCase):
  
 class ListViewTest(TestCase):
     
-     def test_home_page_displays_all_list_items(self):
-        Item.objects.create(text='itemey 1')
-        Item.objects.create(text='itemey 2')
+     def test_displays_all_list_items(self):
+        list_ = List.objects.create()
+        Item.objects.create(text='itemey 1',list=list_)
+        Item.objects.create(text='itemey 2',list=list_)
 
         #request = HttpRequest()
         #response = home_page(request)
