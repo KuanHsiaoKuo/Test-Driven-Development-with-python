@@ -1,4 +1,4 @@
-from printer import print_to_log
+from printer.printer import print_to_log
 from django.test import TestCase
 from django.core.urlresolvers import resolve
 from lists.views import home_page
@@ -81,11 +81,13 @@ class NewListTest(TestCase):
             {'new_item_text':'A new list item'}
         )
      def test_redirects_after_POST(self):
-        #思考可知，顺序为：lists/new,new_list,/lists/%d/,view_list,render
+        print_to_log('a')
+        self.assertRegex('lists/new','lists/new$')
         response = self.client.post(
             'lists/new',
             data={'item_text':'A new list item'}
         )
+        print_to_log('c')
+        self.assertTemplateUsed(response,'list.html')
         new_list = List.objects.first()
-        print_to_log(response)
-        self.assertRedirects(response,'/lists/%d/' % new_list.id)
+        #self.assertRedirects(response,'/lists/%d/' % new_list.id)
