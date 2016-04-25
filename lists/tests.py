@@ -1,3 +1,4 @@
+import sys
 from django.test import TestCase
 from django.core.urlresolvers import resolve
 from lists.views import home_page
@@ -44,19 +45,26 @@ class ListAndItemModelsTest(TestCase):
         self.assertEqual(second_saved_item.list,list_)
  
 class ListViewTest(TestCase):
-    
-     def test_displays_all_list_items(self):
+    def test_uses_list_template(self):
         list_ = List.objects.create()
-        Item.objects.create(text='itemey 1',list=list_)
-        Item.objects.create(text='itemey 2',list=list_)
+        response = self.client.get('/lists/%d/' %(list_.id))
+        self.assertTemplateUsed(response, 'list.html')
 
-        #request = HttpRequest()
-        #response = home_page(request)
-        response = self.client.get('/lists/the-only-list-in-the-world/')
-        self.assertTemplateUsed(response,'list.html')
+    def test_displays_only_items_for_that_list(self):
+        correct_list  = List.objects.create()
+        Item.objects.create(text='itemey 1',list=correct_list)
+        Item.objects.create(text='itemey 2',list=correct_list)
 
+        other_list = List.objects.create()
+        Item.objects.create(text='other list item 1',list=other_list)
+        Item.objects.create(text='other list item 2',list=other_list)
+
+        response = self.client.get('/lists/%d/' %(correct_list.id))
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
+        
+        self.assertNotContains(response,'other list item 1')
+        self.assertNotContains(response,'other list item 1')
 
 class NewListTest(TestCase):
      def test_saving_a_POST_request(self):
@@ -73,11 +81,13 @@ class NewListTest(TestCase):
             {'new_item_text':'A new list item'}
         )
      def test_redirects_after_POST(self):
+        #思考可知，顺序为：lists/new,new_list,/lists/%d/,view_list,render
         response = self.client.post(
             'lists/new',
             data={'item_text':'A new list item'}
         )
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'],'/lists/the-only-list-in-the-world')
- 
+        new_list = List.objects.first()
+        
+        sys.stdout = open('../log.txt','a')
+        print (new_list)
+        self.assertRedirects(response,'/lists/%d/' % new_list.id)
