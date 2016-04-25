@@ -81,13 +81,14 @@ class NewListTest(TestCase):
             {'new_item_text':'A new list item'}
         )
      def test_redirects_after_POST(self):
-        print_to_log('a')
+        print_to_log('a:'+ str(self.client))
         self.assertRegex('lists/new','lists/new$')
+        self.assertRegex('lists/1/','lists/\d+/$')
         response = self.client.post(
             'lists/new',
-            data={'item_text':'A new list item'}
+            {'item_text':'A new list item'}
         )
-        print_to_log('c')
+        print_to_log('d')
         self.assertTemplateUsed(response,'list.html')
         new_list = List.objects.first()
         #self.assertRedirects(response,'/lists/%d/' % new_list.id)
