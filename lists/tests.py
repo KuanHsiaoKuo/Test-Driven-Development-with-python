@@ -1,4 +1,4 @@
-import sys
+from printer import print_to_log
 from django.test import TestCase
 from django.core.urlresolvers import resolve
 from lists.views import home_page
@@ -87,7 +87,5 @@ class NewListTest(TestCase):
             data={'item_text':'A new list item'}
         )
         new_list = List.objects.first()
-        
-        sys.stdout = open('../log.txt','a')
-        print (new_list)
+        print_to_log(response)
         self.assertRedirects(response,'/lists/%d/' % new_list.id)
