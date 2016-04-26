@@ -1,3 +1,4 @@
+import pdb
 from printer.printer import print_to_log
 from django.test import TestCase
 from django.core.urlresolvers import resolve
@@ -81,14 +82,12 @@ class NewListTest(TestCase):
             {'new_item_text':'A new list item'}
         )
      def test_redirects_after_POST(self):
-        print_to_log('a:'+ str(self.client))
-        self.assertRegex('lists/new','lists/new$')
-        self.assertRegex('lists/1/','lists/\d+/$')
-        response = self.client.post(
-            'lists/new',
-            {'item_text':'A new list item'}
-        )
-        print_to_log('d')
+        pdb.set_trace()
+       # print_to_log('a:'+ str(self.client))
+       # self.assertRegex('lists/new','lists/new$')
+       # self.assertRegex('lists/1/','lists/\d+/$')
+        response = self.client.post('lists/new',data= {'item_text':'A new list item'})
+        #print_to_log('d')
         self.assertTemplateUsed(response,'list.html')
         new_list = List.objects.first()
-        #self.assertRedirects(response,'/lists/%d/' % new_list.id)
+        self.assertRedirects(response,'/lists/%d/' % new_list.id)
