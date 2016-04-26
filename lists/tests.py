@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 from lists.views import home_page
 from django.http import HttpRequest
-from django.template.loader import render_to_string
 from lists.models import Item,List
 class HomePageTest(TestCase):
     def test_root_urlresolves_to_home_page_view(self):
@@ -82,12 +81,8 @@ class NewListTest(TestCase):
             {'new_item_text':'A new list item'}
         )
      def test_redirects_after_POST(self):
-        pdb.set_trace()
-       # print_to_log('a:'+ str(self.client))
-       # self.assertRegex('lists/new','lists/new$')
-       # self.assertRegex('lists/1/','lists/\d+/$')
         response = self.client.post('lists/new',data= {'item_text':'A new list item'})
-        #print_to_log('d')
-        self.assertTemplateUsed(response,'list.html')
+        pdb.set_trace()
+        #self.assertTemplateUsed(response,'list.html')
         new_list = List.objects.first()
         self.assertRedirects(response,'/lists/%d/' % new_list.id)

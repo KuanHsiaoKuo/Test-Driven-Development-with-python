@@ -1,4 +1,4 @@
-"""abroadrecommend URL Configuration
+"""lists  URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.9/topics/http/urls/
@@ -14,12 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.contrib import admin
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^$','lists.views.home_page',name='home'),
-    #url(r'^lists/new$','lists.views.new_list',name='new_list'),
-    #url(r'^lists/(\d+)/$','lists.views.view_list',name='view_list'),
-    url(r'^lists/',include('lists.urls')),
+    url(r'^(\d)/$','lists.views.view_list',name='view_list'),
+    url(r'^new$','lists.views.new_list',name='new_lis:')
 ]
